@@ -4,25 +4,16 @@ using UnityEngine;
 
 public class impala : MonoBehaviour {
 
-	//public GameObject[] gotag;
-
 	float a=1.99f;
-	float z;
+	Vector3 pos;
 	float z_0=1.575f; //nm
-	float C_z;
-	float C_zb;
-	float modifier;
 	float Trigger_z;
-
 	Rigidbody rb;
-	Vector3 rbv;
-	Vector3 rbav;
-	Vector3 phobicpos;
-	Transform[] gotag;
 
 	// Use this for initialization
 	void Start () {
 		Trigger_z = this.gameObject.transform.position.y;
+		Debug.Log(this.gameObject.name);
 	}
 	
 	// Update is called once per frame
@@ -30,137 +21,25 @@ public class impala : MonoBehaviour {
 		
 	}
 
-	float switchmod(){
-		//Debug.Log ("switch " + Trigger_z + this.name);
-		if (z < Trigger_z) {
-			modifier = -1;
-		} else {
-			modifier = 1;
-		}
-		return modifier;
+	float CalcdCz(float z)
+	{
+	   var x = z-Trigger_z;
+	   var exp_term = Mathf.Exp (a * (Mathf.Abs(x) - z_0));
+	   
+	   // C_z = 1 - 1/(1+Mathf.Exp (a * (Mathf.Abs(z-Trigger_z) - z_0)));
+	   var dC_z = (a*x*exp_term)/((exp_term+1)*(exp_term+1)*Mathf.Abs(x));
+	   return dC_z;
 	}
 
-	float CalcCz(float z,float modifier){
-		if (Mathf.Abs(z) > 1.35f+Trigger_z && Mathf.Abs(z) < 1.8f+Trigger_z) {
-			C_z = 0.5f - 11f + Mathf.Exp (a * (z - z_0));
-			C_z = C_z * modifier;
-			//Debug.Log ("medium");
-		} else if (Mathf.Abs (z) > 1.35f+Trigger_z) {
-			C_z = 0;
-			//Debug.Log ("lo");
-		} else if (Mathf.Abs (z) < 1.8f+Trigger_z) {
-			C_z = 1 * modifier;
-			//Debug.Log ("hi");
-		}
-		return C_z;
-	}
-
-//  working version
-//	float switchmod(){
-//		if (z < 0) {
-//			modifier = -1;
-//		} else {
-//			modifier = 1;
-//		}
-//		return modifier;
-//	}
-
-
-//	float CalcCz(float z,float modifier){
-//		if (Mathf.Abs(z) > 1.35f && Mathf.Abs(z) < 1.8f) {
-//			C_z = 0.5f - 11f + Mathf.Exp (a * (z - z_0));
-//			C_z = C_z * modifier;
-//			Debug.Log ("medium");
-//		} else if (Mathf.Abs (z) > 1.35f) {
-//			C_z = 0;
-//			Debug.Log ("lo");
-//		} else if (Mathf.Abs (z) < 1.8f) {
-//			C_z = 1 * modifier;
-//			Debug.Log ("hi");
-//		}
-//		return C_z;
-//	}
 
 	void OnTriggerStay (Collider collider) {
-		z = collider.gameObject.transform.position.y;
-		rb = collider.GetComponent<Rigidbody> ();
-		gotag = collider.gameObject.transform.GetComponentsInChildren<Transform> ();
-		var m = switchmod ();
-
-		Vector3 dn = new Vector3 (0f, -1f, 0f);
-		Vector3 up = new Vector3 (0f, 1f, 0f);
-
-		if (collider.gameObject.tag=="helix"){
-		//if (collider.gameObject.layer==11){
-			//Debug.Log ("z " + z);
-
-			rbv = rb.linearVelocity;
-			rbav = rb.angularVelocity;
-
-			rb.linearVelocity = rbv * 0.5f; // membrane is more viscous 
-			rb.angularVelocity = rbav * 0.5f; // membrane is more viscous 
-
-
-
-			Vector3 Frb = (dn * CalcCz (z,m));
-			rb.AddForce (Frb);
-			Debug.DrawLine (rb.position, rb.position + Frb, Color.black);
-			//Debug.Log ("boom ");
-			//Debug.Log (rb.position-(rb.position + Frb));
-
-			for (int ht = 0; ht < gotag.Length; ht++) {
-				if (gotag [ht].tag == "hydrophobic") {
-					phobicpos = gotag [ht].position;
-					var zphob = phobicpos.y;
-
-					Vector3 F = (dn * CalcCz (zphob,m));
-					rb.AddForceAtPosition (F, phobicpos);
-					Debug.DrawLine (phobicpos, phobicpos + F, Color.blue);
-
-				}
-			}
-
-		}
-		else {
-			Vector3 Frb = (up * CalcCz (z,m));
-			rb.AddForce (Frb);
-			Debug.DrawLine (rb.position, rb.position + Frb, Color.white);
-		}
-
-		//	void OnTriggerStay (Collider collider) {
-		//		z = collider.gameObject.transform.position.y;
-		//		rb = collider.GetComponent<Rigidbody> ();
-		//		gotag = collider.gameObject.transform.GetComponentsInChildren<Transform> ();
-		//		var m = switchmod ();
-		//		//Debug.Log ("z " + z);
-		//
-		//		rbv = rb.velocity;
-		//		rbav = rb.angularVelocity;
-		//
-		//		rb.velocity = rbv * 0.5f; // membrane is more viscous 
-		//		rb.angularVelocity = rbav * 0.5f; // membrane is more viscous 
-		//
-		//		Vector3 dn = new Vector3 (0f, -1f, 0f);
-		//		Vector3 up = new Vector3 (0f, 1f, 0f);
-		//
-		//		Vector3 Frb = (dn * CalcCz (z,m));
-		//		rb.AddForce (Frb);
-		//		Debug.DrawLine (rb.position, rb.position + Frb, Color.black);
-		//		//Debug.Log ("boom ");
-		//		//Debug.Log (rb.position-(rb.position + Frb));
-		//
-		//		for (int ht = 0; ht < gotag.Length; ht++) {
-		//			if (gotag [ht].tag == "hydrophobic") {
-		//				phobicpos = gotag [ht].position;
-		//				var zphob = phobicpos.y;
-		//				if (Mathf.Abs(zphob) < 1.8) {
-		//					Vector3 F = (dn * CalcCz (zphob,m));
-		//					rb.AddForceAtPosition (F, phobicpos);
-		//					Debug.DrawLine (phobicpos, phobicpos + F, Color.blue);
-		//				}
-		//			}
-		//		}
-		//
-		//	}
+	        Vector3 up = new Vector3 (0f, 1f, 0f);
+	        var hydrophobicity = collider.gameObject.transform.parent.parent.GetComponent<DomainProperties>().getHydrophobicity();
+	        var area = collider.gameObject.transform.parent.parent.GetComponent<DomainProperties>().getArea();
+		pos = collider.gameObject.transform.position;
+		var f = (18*area-hydrophobicity)*CalcdCz(pos.y)*up;//every collider is a grandchild of the domain rigidbody
+		rb = collider.gameObject.transform.parent.parent.GetComponent<Rigidbody> ();
+		rb.AddForceAtPosition (f, pos);
+		
 	}
 }

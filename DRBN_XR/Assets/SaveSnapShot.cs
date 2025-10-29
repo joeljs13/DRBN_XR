@@ -425,8 +425,8 @@ public class SaveSnapShot : MonoBehaviour
 
     public void periodicsaveJSON(int step)
     {
-        Langevin_v2 Lange = GameObject.FindGameObjectWithTag("Physics_Sim").GetComponent<Langevin_v2>();
-
+        Langevin_v3 Lange = GameObject.FindGameObjectWithTag("Physics_Sim").GetComponent<Langevin_v3>();
+  
         //List<Savedata> savefile = new List<Savedata>();
         List<SavedataHierarchy> savefile = new List<SavedataHierarchy>();
 
@@ -439,7 +439,7 @@ public class SaveSnapShot : MonoBehaviour
         List<Coords> GOVertscoords = new List<Coords>();
 
         int max = Lange.GOS.Count;
-        int mol = Lange.GOmolist.Count;
+        //int mol = Lange.GOmolist.Count;
 
         for (int i = 0; i < max; i++)
         {
@@ -449,7 +449,7 @@ public class SaveSnapShot : MonoBehaviour
         int rbmax = RBlist.Count;
         for (int i = 0; i < rbmax; i++)
         {
-            savefile.Add(new SavedataHierarchy(RBlist[i].transform.parent.name,RBlist[i].name, RBlist[i].position, RBlist[i].rotation.eulerAngles));
+            savefile.Add(new SavedataHierarchy(RBlist[i].transform.parent.name,RBlist[i].name, RBlist[i].position, RBlist[i].rotation));
         }
 
         RBListContainerHierarchy container = new RBListContainerHierarchy(savefile);
@@ -572,13 +572,13 @@ public struct SavedataHierarchy
     public string root;
     public string name;
     public Vector3 pos;
-    public Vector3 rot;
+    public Quaternion rot;
 
     public SavedataHierarchy(
         string root_name,
         string GO_name, 
         Vector3 position, 
-        Vector3 rotation
+        Quaternion rotation
         )
     {
         root = root_name;

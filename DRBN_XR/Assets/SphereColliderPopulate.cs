@@ -57,13 +57,13 @@ public class SphereColliderPopulate : MonoBehaviour
             GameObject ColliderOrientation = new GameObject();
             ColliderOrientation.transform.parent=PopulateGO.transform;
             SphereCollider Sphere = ColliderOrientation.AddComponent<SphereCollider>();
-            Sphere.radius = 0.03f;
+            Sphere.radius = 0.1f;
 
             GameObject TriggerOrientation = new GameObject("trigger");
             TriggerOrientation.transform.parent = PopulateGO.transform;
 
             SphereCollider Sphere_Trig = TriggerOrientation.AddComponent<SphereCollider>();
-            Sphere_Trig.radius = 0.03f;
+            Sphere_Trig.radius = 0.1f;
             Sphere_Trig.isTrigger = true;
             
 
@@ -81,7 +81,7 @@ public class SphereColliderPopulate : MonoBehaviour
             Destroy(GetComponent<Collider>());
             DSphere.transform.parent = PopulateGO.transform;
             DSphere.transform.position = VertList[i];
-            DSphere.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+            DSphere.transform.localScale = new Vector3(0.08f, 0.08f, 0.08f);
             DSphere.transform.localRotation = Quaternion.LookRotation(NormList[i]);
 
             //Debug.Log(PopulateGO.GetComponent<MeshRenderer>().materials[0].name);
