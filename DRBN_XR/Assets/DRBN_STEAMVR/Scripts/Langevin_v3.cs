@@ -11,9 +11,9 @@ public class Langevin_v3 : MonoBehaviour {
     public List<GameObject> GOmol;
     
     /*Langevin variables*/
-    public static float temp = 300.0f;
+    public float temp = 300.0f;
     public static float kB = 8.31f; // Distance:nm, Time:ns, Mass:,kDa, Temperature:K 
-    public static float friction = 28.655f;
+    public float friction = 28.655f;
     public static float dt = GlobalVars.dt;
     
   
@@ -83,10 +83,10 @@ public class Langevin_v3 : MonoBehaviour {
         {
           LangevinSolver();
         }
-        //if (GlobalVars.i % 500 == 0 || GlobalVars.i == 0)
-        //{
-        //    PrintTemperature();
-        //}
+        if (GlobalVars.i % 500 == 0 || GlobalVars.i == 0)
+        {
+            PrintTemperature();
+        }
      if (GlobalVars.i >= 600000)
      { 
        UnityEditor.EditorApplication.isPlaying = false;
