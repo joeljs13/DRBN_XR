@@ -1,24 +1,3 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Glue : MonoBehaviour {
-	
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-	void JoinGO(Rigidbody A,Rigidbody B){
-		GameObject parentA = A.transform.parent.gameObject;
-		GameObject parentB = B.transform.parent.gameObject;
-		FixedJoint Gojoint = parentA.AddComponent<FixedJoint> ();
-
-	}
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:0d8033561fd4ea53c20e42546f6db3c56a269ef4a897ed169457812814ce9734
+size 477

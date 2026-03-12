@@ -1,24 +1,3 @@
-using UnityEngine;
-using System.Collections;
-
-public class CheckCollision : MonoBehaviour
-{
-    void OnCollisionEnter(Collision col)
-    {
-       
-        for (int i = 0; i < col.contactCount; i++)
-        {
-            ContactPoint cp = col.GetContact(i);
-            foreach(ConfigurableJoint joint in this.GetComponents<ConfigurableJoint>())
-            {
-                if (joint.connectedBody == cp.otherCollider.attachedRigidbody)
-                {
-                  Debug.Log("Ignore collisions between "+cp.thisCollider.name+" from " + cp.thisCollider.attachedRigidbody.name+ " and " +cp.otherCollider.name+" from " + cp.otherCollider.attachedRigidbody.name );
-                  Physics.IgnoreCollision(cp.thisCollider, cp.otherCollider);
-                }
-            }
-        }
-        Destroy(this);
-     }
-     
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:05c3f78d7ebc9fcdf0072cbe66249a68c9df69ac48388a76dfd418f7d04f389b
+size 830
